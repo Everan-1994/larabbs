@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use Auth;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Auth;
 
 class User extends Authenticatable
 {
     use Notifiable {
         notify as protected laravelNotify;
     }
+
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -49,7 +52,7 @@ class User extends Authenticatable
     {
         // 如果要通知的人是当前用户，就不必通知了！
         if ($this->id == Auth::id()) {
-            return ;
+            return;
         }
         $this->increment('notification_count');
         $this->laravelNotify($instance);
